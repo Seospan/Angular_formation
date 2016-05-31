@@ -11,7 +11,7 @@ class Product {
       public name: string,
       public imageUrl: string,
       public department: string[],
-      public price: number,) {
+      public price: number) {
   }
 
   voteUp(): void {
@@ -19,7 +19,7 @@ class Product {
   }
 
 }
-
+/*
 @Component({
   selector: 'reddit-article',
   inputs: ['article'],
@@ -37,15 +37,17 @@ class ArticleComponent {
     return false;
   }
 }
-
+*/
 @Component({
-  selector: 'reddit',
-  directives: [ArticleComponent],
-  template: `
+  selector: 'inventory-app',
+  //directives: [ArticleComponent],
+  template: `<div class="inventory-app">
+                (Products will go here soon)
+        </div>
   `
 })
-class MyApp {
-  articles: Article[];
+class InventoryApp {
+  /*articles: Article[];
 
   constructor() {
     this.articles = [
@@ -53,8 +55,8 @@ class MyApp {
       new Article('Fullstack', 'http://fullstack.io', 2),
       new Article('Angular Homepage', 'http://angular.io', 1),
     ];
-  }
+  }*/
 
 }
 
-bootstrap(RedditApp);
+bootstrap(InventoryApp);
