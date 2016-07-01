@@ -44,3 +44,7 @@ ul.ui.list li:before {
   clear: both;
   width: 100%;
 }
+
+.item.selected{
+  border : 1px solid purple !important;
+}
