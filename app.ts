@@ -112,7 +112,7 @@ class PriceDisplay{
     selector: 'product-row',
     directives: [ProductImage, ProductDepartment, PriceDisplay, ProductVotes],
     inputs: ['product'],
-    outputs: ['addToCart'],
+    outputs: ['onProductAdded'],
     host: {'class' : 'item'},
     template:`
     <product-image [product]="product"></product-image>
@@ -127,7 +127,7 @@ class PriceDisplay{
     </div>
     <price-display [price]="product.price"></price-display>
     <product-votes [product]="product"></product-votes>
-    <div class="addToCart">ADD TO CART</div>
+    <div (click)="clicked(clickedProduct)" class="addToCart">ADD TO CART</div>
     `
 })
 class ProductRow {
@@ -137,6 +137,35 @@ class ProductRow {
     constructor() {
         this.onProductAdded = new EventEmitter();
     }
+
+    clicked(clickedProduct : Product){
+        this.onProductAdded.emit(clickedProduct);
+    }
+}
+
+/**
+* @CartRow: A component for the view of single Product
+*/
+@Component({
+    selector: 'cart-row',
+    directives: [ProductImage, ProductDepartment, PriceDisplay, ProductVotes],
+    inputs: ['product'],
+    host: {'class' : 'item'},
+    template:`
+        <div class="cart-line">{{ product.name }}
+        <price-display [price]="product.price"></price-display>
+        </div>
+    `
+})
+class CartRow {
+    product = Product;
+    onProductAdded: EventEmitter<Product>;
+
+    constructor() {
+        this.onProductAdded = new EventEmitter();
+    }
+
+
 }
 
 /**
@@ -144,19 +173,21 @@ class ProductRow {
 */
 @Component({
     selector: 'shopping-cart',
-    directives: [ProductRow],
+    directives: [CartRow],
     inputs: ['cart'],
     host: {class: 'cart'},
     template: `
     <div style="border:1px solid black; width:100%; min-height:50px;">Cart : </div>
-    <product-row
+    <cart-row
         *ngFor="let product of cart.products"
         [product]="product"
-    ></product-row>
+    ></cart-row>
     `
 })
 class ShoppingCart{
     cart:Cart;
+    countedCart:Object;
+
 }
 
 /**
@@ -200,6 +231,7 @@ class ProductBig {
             *ngFor="let myProduct of productList"
             [product]="myProduct"
             (click)='clicked(myProduct)'
+            (onProductAdded)="addProductToCartFct(myProduct)"
             [class.selected]="isSelected(myProduct)">
         </product-row>
     </div>
@@ -234,7 +266,7 @@ class ProductsList {
     clicked(product: Product): void {
         this.currentProduct = product;
         this.onProductSelected.emit(product);
-        this.addProductToCart.emit(product);
+        //this.addProductToCart.emit(product);
     }
 
     isSelected(product: Product): boolean{
@@ -243,6 +275,10 @@ class ProductsList {
         }
 
         return product.sku === this.currentProduct.sku;
+    }
+
+    addProductToCartFct(product: Product): void{
+        this.addProductToCart.emit(product);
     }
 }
 
